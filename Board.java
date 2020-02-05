@@ -40,7 +40,7 @@ public class Board {
                             }
                         }
                     }
-                    
+
                     public void mouseExited(java.awt.event.MouseEvent evt) {
                         revertAll();
                     }
@@ -49,7 +49,7 @@ public class Board {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         Piece currentPiece = currentPlayer.currentPiece;
-                        if(isValidMove(row, col).equals("Valid move")) {
+                        if (isValidMove(row, col).equals("Valid move")) {
                             for (int k = 0; k < 5; k++) {
                                 for (int l = 0; l < 5; l++) {
                                     if (currentPiece.matrix[k][l] >= 1) {
@@ -59,8 +59,8 @@ public class Board {
                             }
                             Blokus.setTurn((currentPlayerId + 1) % 4);
                         } else {
-                            JOptionPane.showMessageDialog(new JFrame(), isValidMove(row, col),
-                                    "Invalid move", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(new JFrame(), isValidMove(row, col), "Invalid move",
+                                    JOptionPane.ERROR_MESSAGE);
                         }
                     }
                 });
@@ -82,8 +82,14 @@ public class Board {
 
     private String isValidMove(int row, int col) {
         Piece currentPiece = currentPlayer.currentPiece;
-        if (row - 2 < 0 || row + 2 >= BOARD_SIDE || col - 2 < 0 || col + 2 >= BOARD_SIDE) {
-            return "Out of bounds!";
+        for (int k = 0; k < 5; k++) {
+            for (int l = 0; l < 5; l++) {
+                if (currentPiece.matrix[k][l] >= 1) {
+                    if (row - 2 + k >= BOARD_SIDE || row - 2 + k < 0 || col - 2 + l >= BOARD_SIDE || col - 2 + l < 0) {
+                        return "Out of bounds!";
+                    }
+                }
+            }
         }
         for (int k = 0; k < 5; k++) {
             for (int l = 0; l < 5; l++) {
