@@ -56,6 +56,7 @@ public class Player {
         playerControls[2].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 currentPiece.matrix = currentPiece.rotate();
+                currentPiece.matrix = currentPiece.centralize(currentPiece.matrix);
                 refreshGrid();
             }
         });
@@ -63,6 +64,7 @@ public class Player {
         playerControls[3].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 currentPiece.matrix = currentPiece.horizontalMirror(currentPiece.matrix);
+                currentPiece.matrix = currentPiece.centralize(currentPiece.matrix);
                 refreshGrid();
             }
         });
@@ -70,6 +72,7 @@ public class Player {
         playerControls[4].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 currentPiece.matrix = currentPiece.verticalMirror(currentPiece.matrix);
+                currentPiece.matrix = currentPiece.centralize(currentPiece.matrix);
                 refreshGrid();
             }
         });
