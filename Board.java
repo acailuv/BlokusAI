@@ -1,13 +1,17 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Board {
 
     public static final int BOARD_SIDE = 20;
 
-    protected JFrame boardFrame          = new JFrame("Blokus Board");
-    protected JPanel board               = new JPanel(new GridLayout(Board.BOARD_SIDE,Board.BOARD_SIDE));
-    protected JButton boardTiles[][]     = new JButton[Board.BOARD_SIDE][Board.BOARD_SIDE];
+    protected JFrame boardFrame = new JFrame("Blokus Board");
+    protected JPanel board = new JPanel(new GridLayout(Board.BOARD_SIDE, Board.BOARD_SIDE));
+    protected Tile boardTiles[][] = new Tile[Board.BOARD_SIDE][Board.BOARD_SIDE];
+    protected Player currentPlayer;
+    protected int currentPlayerId;
 
     public Board() {
         // Setting Layout
@@ -15,9 +19,9 @@ public class Board {
         boardFrame.setLayout(new BorderLayout(10, 10));
 
         // Initializing Board
-        for(int i=0; i<Board.BOARD_SIDE; i++) {
-            for(int j=0; j<Board.BOARD_SIDE; j++) {
-                boardTiles[i][j] = new JButton();
+        for (int i = 0; i < Board.BOARD_SIDE; i++) {
+            for (int j = 0; j < Board.BOARD_SIDE; j++) {
+                boardTiles[i][j] = new Tile();
                 boardTiles[i][j].setBorder(BorderFactory.createLineBorder(Color.GRAY));
                 boardTiles[i][j].setBackground(Color.WHITE);
 
@@ -27,19 +31,37 @@ public class Board {
                 col = j;
                 boardTiles[i][j].addMouseListener(new java.awt.event.MouseAdapter() {
                     public void mouseEntered(java.awt.event.MouseEvent evt) {
-                        highlightTile(row, col,     Color.RED);
-                        highlightTile(row+1, col,   Color.RED);
-                        highlightTile(row-1, col,   Color.RED);
-                        highlightTile(row, col+1,   Color.RED);
-                        highlightTile(row, col-1,   Color.RED);
+                        Piece currentPiece = currentPlayer.currentPiece;
+                        for (int k = 0; k < 5; k++) {
+                            for (int l = 0; l < 5; l++) {
+                                if (currentPiece.matrix[k][l] >= 1) {
+                                    highlightTile(row - 2 + k, col - 2 + l, Color.CYAN);
+                                }
+                            }
+                        }
                     }
-                
+                    
                     public void mouseExited(java.awt.event.MouseEvent evt) {
-                        highlightTile(row, col,     Color.WHITE);
-                        highlightTile(row+1, col,   Color.WHITE);
-                        highlightTile(row-1, col,   Color.WHITE);
-                        highlightTile(row, col+1,   Color.WHITE);
-                        highlightTile(row, col-1,   Color.WHITE);
+                        revertAll();
+                    }
+                });
+                boardTiles[i][j].addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        Piece currentPiece = currentPlayer.currentPiece;
+                        if(isValidMove(row, col).equals("Valid move")) {
+                            for (int k = 0; k < 5; k++) {
+                                for (int l = 0; l < 5; l++) {
+                                    if (currentPiece.matrix[k][l] >= 1) {
+                                        boardTiles[row - 2 + k][col - 2 + l].place = currentPlayerId;
+                                    }
+                                }
+                            }
+                            Blokus.setTurn((currentPlayerId + 1) % 4);
+                        } else {
+                            JOptionPane.showMessageDialog(new JFrame(), isValidMove(row, col),
+                                    "Invalid move", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 });
                 // -----------------------------------------------------------
@@ -54,11 +76,38 @@ public class Board {
         boardFrame.setResizable(false);
     }
 
+    public void setPlayer(Player player) {
+        currentPlayer = player;
+    }
+
+    private String isValidMove(int row, int col) {
+        Piece currentPiece = currentPlayer.currentPiece;
+        if (row - 2 < 0 || row + 2 >= BOARD_SIDE || col - 2 < 0 || col + 2 >= BOARD_SIDE) {
+            return "Out of bounds!";
+        }
+        for (int k = 0; k < 5; k++) {
+            for (int l = 0; l < 5; l++) {
+                if (currentPiece.matrix[k][l] >= 1 && boardTiles[row - 2 + k][col - 2 + l].place != -1) {
+                    return "Cannot place on top of other piece!";
+                }
+            }
+        }
+        return "Valid move";
+    }
+
     private void highlightTile(int row, int col, Color c) {
         try {
             boardTiles[row][col].setBackground(c);
         } catch (ArrayIndexOutOfBoundsException e) {
             // Skipp
+        }
+    }
+
+    private void revertAll() {
+        for (int i = 0; i < Board.BOARD_SIDE; i++) {
+            for (int j = 0; j < Board.BOARD_SIDE; j++) {
+                boardTiles[i][j].revert();
+            }
         }
     }
 

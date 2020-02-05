@@ -1,6 +1,6 @@
 public class Gui {
 
-    protected Player players[];
+    public Player players[];
     protected Board board;
 
     public Gui(Player[] players, Board board) {
@@ -14,6 +14,8 @@ public class Gui {
 
     public void renderPlayer(int playerId) {
         players[playerId].render();
+        board.setPlayer(players[playerId]);
+        board.currentPlayerId = playerId;
     }
 
     public void hidePlayers() {
