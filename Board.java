@@ -10,10 +10,15 @@ public class Board {
     protected JFrame boardFrame = new JFrame("Blokus Board");
     protected JPanel board = new JPanel(new GridLayout(Board.BOARD_SIDE, Board.BOARD_SIDE));
     protected Tile boardTiles[][] = new Tile[Board.BOARD_SIDE][Board.BOARD_SIDE];
+    protected Boolean firstTurn[] = new Boolean[4];
     protected Player currentPlayer;
     protected int currentPlayerId;
 
     public Board() {
+        // Set all players as first turn
+        for(int i = 0; i < 4; i++) {
+            firstTurn[i] = true;
+        }
         // Setting Layout
         boardFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         boardFrame.setLayout(new BorderLayout(10, 10));
@@ -57,6 +62,13 @@ public class Board {
                                     }
                                 }
                             }
+                            // Mark the piece as used and search for the next available piece
+                            currentPlayer.usedPiece[currentPlayer.currentPieceIndex] = true;
+                            while(currentPlayer.usedPiece[currentPlayer.currentPieceIndex] == true) {
+                                currentPlayer.currentPieceIndex = (currentPlayer.currentPieceIndex + 1) % 21; 
+                            }
+                            currentPlayer.currentPiece = currentPlayer.pieces[currentPlayer.currentPieceIndex];
+                            currentPlayer.refreshGrid();
                             Blokus.setTurn((currentPlayerId + 1) % 4);
                         } else {
                             JOptionPane.showMessageDialog(new JFrame(), isValidMove(row, col), "Invalid move",

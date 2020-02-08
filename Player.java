@@ -9,6 +9,7 @@ public class Player {
     protected int currentPieceIndex = 0;
     protected Piece currentPiece;
     protected int playerId;
+    protected Boolean usedPiece[] = new Boolean[21];
 
     protected JFrame playerFrame                = new JFrame();
     protected JPanel playerPanel                = new JPanel(new BorderLayout());
@@ -40,6 +41,9 @@ public class Player {
         playerControls[0].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 currentPieceIndex = (currentPieceIndex+20)%21;
+                while(usedPiece[currentPieceIndex] == true) {
+                    currentPieceIndex = (currentPieceIndex+20)%21;
+                }
                 currentPiece = pieces[currentPieceIndex];
                 refreshGrid();
             }
@@ -48,6 +52,9 @@ public class Player {
         playerControls[1].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 currentPieceIndex = (currentPieceIndex+1)%21;
+                while(usedPiece[currentPieceIndex] == true) {
+                    currentPieceIndex = (currentPieceIndex+1)%21;
+                }
                 currentPiece = pieces[currentPieceIndex];
                 refreshGrid();
             }
@@ -76,7 +83,10 @@ public class Player {
                 refreshGrid();
             }
         });
-
+        // Set all used pieces as false
+        for(int i=0; i<21; i++) {
+            usedPiece[i] = false;
+        }
         // Initializing Pieces
         for(int i=0; i<21; i++) {
             pieces[i] = new Piece(i);
@@ -98,6 +108,7 @@ public class Player {
     }
 
     public void refreshGrid() {
+        currentPiece.matrix = currentPiece.centralize(currentPiece.matrix);
         for(int i=0; i<5; i++) {
             for(int j=0; j<5; j++) {
                 playerSelectionTiles[i][j].setBackground(Color.WHITE);
