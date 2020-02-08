@@ -24,7 +24,7 @@ public class Player {
         System.out.println("Created Player: " + Integer.toString(this.playerId));
 
         // Setting Title
-        playerFrame.setTitle("Player #" + Integer.toString(playerId));
+        playerFrame.setTitle("Player #" + Integer.toString(playerId + 1));
 
         // Initializing Selection Tiles
         for(int i=0; i<5; i++) {
@@ -118,19 +118,19 @@ public class Player {
             for(int j=0; j<5; j++) {
                 if (currentPiece.matrix[i][j] >= 1) {
                     switch (this.playerId) {
-                        case 1:
+                        case 0:
                         playerSelectionTiles[i][j].setBackground(Color.RED);
                         break;
 
-                        case 2:
+                        case 1:
                         playerSelectionTiles[i][j].setBackground(Color.GREEN);
                         break;
 
-                        case 3:
+                        case 2:
                         playerSelectionTiles[i][j].setBackground(Color.BLUE);
                         break;
 
-                        case 4:
+                        case 3:
                         playerSelectionTiles[i][j].setBackground(Color.YELLOW);
                         break;
                     }

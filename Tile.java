@@ -22,5 +22,6 @@ public class Tile extends JButton {
             setBackground(Color.YELLOW);
             break;
         }
+        setText(Integer.toString(place));
     }
 }

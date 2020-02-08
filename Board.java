@@ -70,6 +70,7 @@ public class Board {
                             }
                             currentPlayer.currentPiece = currentPlayer.pieces[currentPlayer.currentPieceIndex];
                             currentPlayer.refreshGrid();
+                            System.out.println(currentPlayerId);
                             Blokus.setTurn((currentPlayerId + 1) % 4);
                         } else {
                             JOptionPane.showMessageDialog(new JFrame(), isValidMove(row, col), "Invalid move",
@@ -95,6 +96,7 @@ public class Board {
 
     private String isValidMove(int row, int col) {
         Piece currentPiece = currentPlayer.currentPiece;
+        // Check for out of bounds
         for (int k = 0; k < 5; k++) {
             for (int l = 0; l < 5; l++) {
                 if (currentPiece.matrix[k][l] >= 1) {
@@ -104,6 +106,7 @@ public class Board {
                 }
             }
         }
+        // Ceck for stacking
         for (int k = 0; k < 5; k++) {
             for (int l = 0; l < 5; l++) {
                 if (currentPiece.matrix[k][l] >= 1 && boardTiles[row - 2 + k][col - 2 + l].place != -1) {
@@ -111,6 +114,7 @@ public class Board {
                 }
             }
         }
+        // Check for first turn
         if (firstTurn[currentPlayerId] == true) {
             Boolean edge = false;
             switch (currentPlayerId) {
@@ -164,6 +168,40 @@ public class Board {
             }
             if (edge == false) {
                 return "First piece must be at a corner!";
+            }
+        } else {
+            // Check for side
+            Boolean side = false;
+            for (int k = 0; k < 5; k++) {
+                for (int l = 0; l < 5; l++) {
+                    int x = col - 2 + l;
+                    int y = row - 2 + k;
+                    if (currentPiece.matrix[k][l] >= 1) {
+                        if (x - 1 >= 0) {
+                            if (boardTiles[y][x - 1].place == currentPlayerId) {
+                                side = true;
+                            }
+                        }
+                        if (x + 1 < BOARD_SIDE) {
+                            if (boardTiles[y][x + 1].place == currentPlayerId) {
+                                side = true;
+                            }
+                        }
+                        if (y - 1 >= 0) {
+                            if (boardTiles[y - 1][x].place == currentPlayerId) {
+                                side = true;
+                            }
+                        }
+                        if (y + 1 < BOARD_SIDE) {
+                            if (boardTiles[y + 1][x].place == currentPlayerId) {
+                                side = true;
+                            }
+                        }
+                    }
+                }
+            }
+            if (side == true) {
+                return "Side of piece must not collide with your own piece!";
             }
         }
         return "Valid move";

@@ -8,7 +8,7 @@ public class Blokus {
         System.out.println("Blokus is ON!");
         // Initializing Players
         for (int i=0; i<MAX_PLAYER; i++) {
-            players[i] = new Player(i+1);
+            players[i] = new Player(i);
         }
         mainGui = new Gui(players, board);
         mainGui.renderBoard();
@@ -18,6 +18,7 @@ public class Blokus {
     }
 
     public static void setTurn(int playerId) {
+        board.currentPlayerId = playerId;
         mainGui.hidePlayers();
         mainGui.renderPlayer(playerId);
     }
