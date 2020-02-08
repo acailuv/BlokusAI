@@ -16,7 +16,7 @@ public class Board {
 
     public Board() {
         // Set all players as first turn
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             firstTurn[i] = true;
         }
         // Setting Layout
@@ -63,9 +63,10 @@ public class Board {
                                 }
                             }
                             // Mark the piece as used and search for the next available piece
+                            firstTurn[currentPlayerId] = false;
                             currentPlayer.usedPiece[currentPlayer.currentPieceIndex] = true;
-                            while(currentPlayer.usedPiece[currentPlayer.currentPieceIndex] == true) {
-                                currentPlayer.currentPieceIndex = (currentPlayer.currentPieceIndex + 1) % 21; 
+                            while (currentPlayer.usedPiece[currentPlayer.currentPieceIndex] == true) {
+                                currentPlayer.currentPieceIndex = (currentPlayer.currentPieceIndex + 1) % 21;
                             }
                             currentPlayer.currentPiece = currentPlayer.pieces[currentPlayer.currentPieceIndex];
                             currentPlayer.refreshGrid();
@@ -108,6 +109,61 @@ public class Board {
                 if (currentPiece.matrix[k][l] >= 1 && boardTiles[row - 2 + k][col - 2 + l].place != -1) {
                     return "Cannot place on top of other piece!";
                 }
+            }
+        }
+        if (firstTurn[currentPlayerId] == true) {
+            Boolean edge = false;
+            switch (currentPlayerId) {
+            case 0:
+                for (int k = 0; k < 5; k++) {
+                    for (int l = 0; l < 5; l++) {
+                        if (currentPiece.matrix[k][l] >= 1 && row - 2 + k == 0 && col - 2 + l == 0) {
+                            edge = true;
+                            break;
+                        }
+                    }
+                }
+                break;
+
+            case 1:
+                for (int k = 0; k < 5; k++) {
+                    for (int l = 0; l < 5; l++) {
+                        if (currentPiece.matrix[k][l] >= 1 && row - 2 + k == 0 && col - 2 + l == BOARD_SIDE - 1) {
+                            edge = true;
+                            break;
+                        }
+                    }
+                }
+
+                break;
+
+            case 2:
+                for (int k = 0; k < 5; k++) {
+                    for (int l = 0; l < 5; l++) {
+                        if (currentPiece.matrix[k][l] >= 1 && row - 2 + k == BOARD_SIDE - 1 && col - 2 + l == 0) {
+                            edge = true;
+                            break;
+                        }
+                    }
+                }
+
+                break;
+
+            case 3:
+                for (int k = 0; k < 5; k++) {
+                    for (int l = 0; l < 5; l++) {
+                        if (currentPiece.matrix[k][l] >= 1 && row - 2 + k == BOARD_SIDE - 1
+                                && col - 2 + l == BOARD_SIDE - 1) {
+                            edge = true;
+                            break;
+                        }
+                    }
+                }
+
+                break;
+            }
+            if (edge == false) {
+                return "First piece must be at a corner!";
             }
         }
         return "Valid move";

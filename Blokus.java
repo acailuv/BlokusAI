@@ -14,7 +14,7 @@ public class Blokus {
         mainGui.renderBoard();
 
         // Demo
-        setTurn(3);
+        setTurn(0);
     }
 
     public static void setTurn(int playerId) {
