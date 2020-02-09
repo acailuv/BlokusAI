@@ -70,7 +70,7 @@ public class Board {
                             }
                             currentPlayer.currentPiece = currentPlayer.pieces[currentPlayer.currentPieceIndex];
                             currentPlayer.refreshGrid();
-                            System.out.println(currentPlayerId);
+                            // System.out.println(currentPlayerId);
                             Blokus.setTurn((currentPlayerId + 1) % 4);
                         } else {
                             JOptionPane.showMessageDialog(new JFrame(), isValidMove(row, col), "Invalid move",
@@ -172,6 +172,7 @@ public class Board {
         } else {
             // Check for side
             Boolean side = false;
+            Boolean diagonal = false;
             for (int k = 0; k < 5; k++) {
                 for (int l = 0; l < 5; l++) {
                     int x = col - 2 + l;
@@ -181,10 +182,30 @@ public class Board {
                             if (boardTiles[y][x - 1].place == currentPlayerId) {
                                 side = true;
                             }
+                            if (y - 1 >= 0) {
+                                if (boardTiles[y - 1][x - 1].place == currentPlayerId) {
+                                    diagonal = true;
+                                }
+                            }
+                            if (y + 1 < BOARD_SIDE) {
+                                if (boardTiles[y + 1][x - 1].place == currentPlayerId) {
+                                    diagonal = true;
+                                }
+                            }
                         }
                         if (x + 1 < BOARD_SIDE) {
                             if (boardTiles[y][x + 1].place == currentPlayerId) {
                                 side = true;
+                            }
+                            if (y - 1 >= 0) {
+                                if (boardTiles[y - 1][x + 1].place == currentPlayerId) {
+                                    diagonal = true;
+                                }
+                            }
+                            if (y + 1 < BOARD_SIDE) {
+                                if (boardTiles[y + 1][x + 1].place == currentPlayerId) {
+                                    diagonal = true;
+                                }
                             }
                         }
                         if (y - 1 >= 0) {
@@ -202,6 +223,8 @@ public class Board {
             }
             if (side == true) {
                 return "Side of piece must not collide with your own piece!";
+            } else if (diagonal == false) {
+                return "Your piece must collide with at least one diagonal!";
             }
         }
         return "Valid move";
