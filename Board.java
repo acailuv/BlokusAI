@@ -170,7 +170,7 @@ public class Board {
                 return "First piece must be at a corner!";
             }
         } else {
-            // Check for side
+            // Check for side and diagonal
             Boolean side = false;
             Boolean diagonal = false;
             for (int k = 0; k < 5; k++) {
@@ -242,6 +242,76 @@ public class Board {
         for (int i = 0; i < Board.BOARD_SIDE; i++) {
             for (int j = 0; j < Board.BOARD_SIDE; j++) {
                 boardTiles[i][j].revert();
+            }
+        }
+        // Highlight possible placements
+        if (firstTurn[currentPlayerId] == true) {
+            switch (currentPlayerId) {
+            case 0:
+                boardTiles[0][0].setBackground(Color.GRAY);
+                break;
+
+            case 1:
+                boardTiles[0][0].setBackground(Color.GRAY);
+                break;
+
+            case 2:
+                boardTiles[0][0].setBackground(Color.GRAY);
+                break;
+
+            case 3:
+                boardTiles[0][0].setBackground(Color.GRAY);
+                break;
+            }
+        } else {
+            for (int i = 0; i < Board.BOARD_SIDE; i++) {
+                for (int j = 0; j < Board.BOARD_SIDE; j++) {
+                    Boolean side = false;
+                    Boolean diagonal = false;
+                    if (j - 1 >= 0) {
+                        if (boardTiles[i][j - 1].place == currentPlayerId) {
+                            side = true;
+                        }
+                        if (i - 1 >= 0) {
+                            if (boardTiles[i - 1][j - 1].place == currentPlayerId) {
+                                diagonal = true;
+                            }
+                        }
+                        if (i + 1 < BOARD_SIDE) {
+                            if (boardTiles[i + 1][j - 1].place == currentPlayerId) {
+                                diagonal = true;
+                            }
+                        }
+                    }
+                    if (j + 1 < BOARD_SIDE) {
+                        if (boardTiles[i][j + 1].place == currentPlayerId) {
+                            side = true;
+                        }
+                        if (i - 1 >= 0) {
+                            if (boardTiles[i - 1][j + 1].place == currentPlayerId) {
+                                diagonal = true;
+                            }
+                        }
+                        if (i + 1 < BOARD_SIDE) {
+                            if (boardTiles[i + 1][j + 1].place == currentPlayerId) {
+                                diagonal = true;
+                            }
+                        }
+                    }
+                    if (i - 1 >= 0) {
+                        if (boardTiles[i - 1][j].place == currentPlayerId) {
+                            side = true;
+                        }
+                    }
+                    if (i + 1 < BOARD_SIDE) {
+                        if (boardTiles[i + 1][j].place == currentPlayerId) {
+                            side = true;
+                        }
+                    }
+                    if (side == false && diagonal == true) {
+                        boardTiles[i][j].setBackground(Color.GRAY);
+                    }
+                }
             }
         }
     }
