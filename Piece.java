@@ -186,6 +186,7 @@ public class Piece {
                 newMatrix[i][j] = temp;
             }
         }
+        matrix = newMatrix;
         return newMatrix;
     }
 
@@ -197,6 +198,7 @@ public class Piece {
                 newMatrix[i][j] = temp;
             }
         }
+        matrix = newMatrix;
         return newMatrix;
     }
 
@@ -224,6 +226,7 @@ public class Piece {
                 }
             }
         }
+        matrix = newMatrix;
         return newMatrix;
     }
 
