@@ -8,7 +8,8 @@ public class Blokus {
         System.out.println("Blokus is ON!");
         // Initializing Players
         for (int i=0; i<MAX_PLAYER; i++) {
-            players[i] = new Player(i);
+            if(i != 0) players[i] = new AI(i);
+            else players[i] = new Player(i);
         }
         mainGui = new Gui(players, board);
         mainGui.renderBoard();
@@ -21,6 +22,11 @@ public class Blokus {
         board.currentPlayerId = playerId;
         mainGui.hidePlayers();
         mainGui.renderPlayer(playerId);
+        if(players[playerId] instanceof AI) {
+            board.boardTiles = ((AI)players[playerId]).nextMove(board);
+            board.firstTurn[playerId] = false;
+            board.nextPlayer();
+        }
     }
 
 }

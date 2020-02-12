@@ -73,7 +73,7 @@ public class Board {
                             }
                             currentPlayer.currentPiece = currentPlayer.pieces[currentPlayer.currentPieceIndex];
                             currentPlayer.refreshGrid();
-                            // System.out.println(currentPlayerId);
+                            // System.out.println(currentPlayer instanceof AI);
                             // Change player ID to one that still has moves
                             nextPlayer();
                             while(hasMove() == false) {
@@ -152,7 +152,7 @@ public class Board {
         return false;
     }
 
-    private String isValidMove(int row, int col, Piece currentPiece) {
+    protected String isValidMove(int row, int col, Piece currentPiece) {
         // Check for out of bounds
         for (int k = 0; k < 5; k++) {
             for (int l = 0; l < 5; l++) {
