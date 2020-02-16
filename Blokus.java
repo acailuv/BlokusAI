@@ -31,8 +31,8 @@ public class Blokus {
         if (players[playerId] instanceof AI) {
             if (board.hasMove() == false) {
                 JOptionPane.showMessageDialog(new JFrame(),
-                        "No more moves for player " + Integer.toString(board.currentPlayerId + 1) + "!", "Out of moves",
-                        JOptionPane.WARNING_MESSAGE);
+                "No more moves for player " + Integer.toString(board.currentPlayerId + 1) + "!", "Out of moves",
+                JOptionPane.WARNING_MESSAGE);
                 board.gameOver[board.currentPlayerId] = true;
             }
             board.boardTiles = ((AI) players[playerId]).nextMove(board);
@@ -41,4 +41,7 @@ public class Blokus {
         }
     }
 
+    public static void gameFinished() {
+        new Results(players);
+    }
 }

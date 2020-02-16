@@ -68,21 +68,29 @@ public class Board {
                             // Mark the piece as used and search for the next available piece
                             firstTurn[currentPlayerId] = false;
                             currentPlayer.usedPiece[currentPlayer.currentPieceIndex] = true;
-                            while (currentPlayer.usedPiece[currentPlayer.currentPieceIndex] == true) {
-                                currentPlayer.currentPieceIndex = (currentPlayer.currentPieceIndex + 1) % 21;
-                            }
-                            currentPlayer.currentPiece = currentPlayer.pieces[currentPlayer.currentPieceIndex];
-                            currentPlayer.refreshGrid();
-                            // System.out.println(currentPlayer instanceof AI);
-                            // Change player ID to one that still has moves
-                            nextPlayer();
-                            while(hasMove() == false) {
-                                JOptionPane.showMessageDialog(new JFrame(), "No more moves for player " + Integer.toString(currentPlayerId + 1) + "!", "Out of moves",
-                                JOptionPane.WARNING_MESSAGE);
+                            currentPlayer.lastPiece = currentPlayer.currentPieceIndex;
+                            if (currentPlayer.usedAll() == false) {
+                                while (currentPlayer.usedPiece[currentPlayer.currentPieceIndex] == true) {
+                                    currentPlayer.currentPieceIndex = (currentPlayer.currentPieceIndex + 1) % 21;
+                                }
+                                currentPlayer.currentPiece = currentPlayer.pieces[currentPlayer.currentPieceIndex];
+                                currentPlayer.refreshGrid();
+                            } else {
                                 gameOver[currentPlayerId] = true;
-                                nextPlayer();
                             }
-                            
+                            nextPlayer();
+                            while (hasMove() == false) {
+                                JOptionPane.showMessageDialog(new JFrame(),
+                                        "No more moves for player " + Integer.toString(currentPlayerId + 1) + "!",
+                                        "Out of moves", JOptionPane.WARNING_MESSAGE);
+                                gameOver[currentPlayerId] = true;
+                                if (allOver() < 4) {
+                                    nextPlayer();
+                                } else {
+                                    break;
+                                }
+                            }
+
                         } else {
                             JOptionPane.showMessageDialog(new JFrame(), isValidMove(row, col, currentPiece),
                                     "Invalid move", JOptionPane.ERROR_MESSAGE);
@@ -104,35 +112,36 @@ public class Board {
     public void setPlayer(Player player) {
         currentPlayer = player;
     }
+
     public int allOver() {
+        // Returns how many players have no more moves
         int count = 0;
-        for(int i = 0; i < 4; i++) {
-            if(gameOver[i] == true) {
+        for (int i = 0; i < 4; i++) {
+            if (gameOver[i] == true) {
                 count += 1;
             }
         }
         return count;
     }
+
     public void nextPlayer() {
-        if(allOver() == 4) {
+        // Change player ID to one that still has moves, unless everyone is out of moves
+        if (allOver() == 4) {
             JOptionPane.showMessageDialog(new JFrame(), "Everyone is out of moves!", "Out of moves",
-            JOptionPane.WARNING_MESSAGE);
-            System.exit(0);
-        }
-        currentPlayerId = (currentPlayerId + 1) % 4;
-        while(gameOver[currentPlayerId] == true) {
+                    JOptionPane.WARNING_MESSAGE);
+            currentPlayer.hide();
+            Blokus.gameFinished();
+        } else {
             currentPlayerId = (currentPlayerId + 1) % 4;
-        }
-        Blokus.setTurn(currentPlayerId);
-    }
-    public Boolean hasMove() {
-        Boolean usedAll = true;
-        for(int i = 0; i < currentPlayer.usedPiece.length; i++) {
-            if(currentPlayer.usedPiece[i] == false) {
-                usedAll = false;
+            while (gameOver[currentPlayerId] == true) {
+                currentPlayerId = (currentPlayerId + 1) % 4;
             }
+            Blokus.setTurn(currentPlayerId);
         }
-        if(usedAll == true) {
+    }
+
+    public Boolean hasMove() {
+        if (currentPlayer.usedAll() == true) {
             return false;
         }
         for (int i = 0; i < BOARD_SIDE; i++) {

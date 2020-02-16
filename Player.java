@@ -7,7 +7,9 @@ public class Player {
     protected int score;
     protected Piece pieces[] = new Piece[21];
     protected int currentPieceIndex = 0;
+    protected int lastPiece;
     protected Piece currentPiece;
+    protected int[] pieceValue = new int[]{1, 2, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5};
     protected int playerId;
     protected Boolean usedPiece[] = new Boolean[21];
 
@@ -138,7 +140,14 @@ public class Player {
             }
         }
     }
-
+    protected Boolean usedAll() {
+        for(int i = 0; i < usedPiece.length; i++) {
+            if(usedPiece[i] == false) {
+                return false;
+            }
+        }
+        return true;
+    }
     public void render() {
         playerFrame.setVisible(true);
     }
