@@ -126,6 +126,15 @@ public class Board {
         Blokus.setTurn(currentPlayerId);
     }
     public Boolean hasMove() {
+        Boolean usedAll = true;
+        for(int i = 0; i < currentPlayer.usedPiece.length; i++) {
+            if(currentPlayer.usedPiece[i] == false) {
+                usedAll = false;
+            }
+        }
+        if(usedAll == true) {
+            return false;
+        }
         for (int i = 0; i < BOARD_SIDE; i++) {
             for (int j = 0; j < BOARD_SIDE; j++) {
                 for (int ii = 20; ii >= 0; ii--) {
