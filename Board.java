@@ -105,6 +105,7 @@ public class Board {
 
         // Final Initialization
         boardFrame.add(board);
+        boardFrame.setLocation(800, 100);
         boardFrame.setSize(800, 800);
         boardFrame.setResizable(false);
     }

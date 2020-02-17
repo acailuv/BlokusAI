@@ -20,6 +20,9 @@ public class Player {
     protected JPanel playerSelectionTiles[][]   = new JPanel[5][5];
     protected JButton playerControls[]          = new JButton[5];
 
+    protected JFrame remainingPieceFrame        = new JFrame("Remaining Pieces");
+    protected JPanel remainingPieceTiles[][]    = new JPanel[15][35];
+
     public Player(int playerId) {
         // Setting Player ID
         this.playerId = playerId;
@@ -35,6 +38,21 @@ public class Player {
                 playerSelectionTiles[i][j].setBorder(BorderFactory.createLineBorder(Color.GRAY));
                 playerSelectionTiles[i][j].setBackground(Color.WHITE);
                 playerSelection.add(playerSelectionTiles[i][j]);
+            }
+        }
+        remainingPieceFrame.setLocation(0, 500);
+        remainingPieceFrame.setResizable(false);
+        remainingPieceFrame.setSize(700, 300);
+        remainingPieceFrame.add(playerPanel);
+
+        // Initializing Remaining Piece Frame
+        remainingPieceFrame.setLayout(new GridLayout(15, 35));
+        for (int i=0; i<15; i++) {
+            for (int j=0; j<35; j++) {
+                remainingPieceTiles[i][j] = new JPanel();
+                remainingPieceTiles[i][j].setBorder(BorderFactory.createLineBorder(Color.GRAY));
+                remainingPieceTiles[i][j].setBackground(Color.WHITE);
+                remainingPieceFrame.add(remainingPieceTiles[i][j]);
             }
         }
 
@@ -148,11 +166,46 @@ public class Player {
         }
         return true;
     }
+
+    public void refreshRemainingPieces() {
+        // Reset the remaining pieces panels
+        for (int i=0; i<15; i++) {
+            for (int j=0; j<35; j++) {
+                remainingPieceTiles[i][j].setBackground(Color.WHITE);
+            }
+        }
+
+        // Re-populate the panels with remaining pieces
+        int currentRow = 0;
+        int currentCol = 0;
+        for (int id=0; id<21; id++) {
+            if (!usedPiece[id]) {
+                Integer currentMatrix[][] = pieces[id].centralize(pieces[id].matrix);
+                for (int i=0; i<5; i++) {
+                    for (int j=0; j<5; j++) {
+                        if (currentMatrix[i][j] >= 1) {
+                            remainingPieceTiles[currentRow + i][currentCol + j].setBackground(Color.RED);
+                        }
+                    }
+                }
+                if (currentCol+5 == 35) {
+                    currentRow += 5;
+                    currentCol = 0;
+                } else {
+                    currentCol += 5;
+                }
+            }
+        }
+    }
+
     public void render() {
+        refreshRemainingPieces();
+        remainingPieceFrame.setVisible(true);
         playerFrame.setVisible(true);
     }
 
     public void hide() {
+        remainingPieceFrame.setVisible(false);
         playerFrame.setVisible(false);
     }
 
